@@ -1,0 +1,10 @@
+Host *
+  StrictHostKeyChecking	no
+  UserKnownHostsFile	/dev/null
+  LogLevel		QUIET
+
+  IdentitiesOnly	yes
+  # Ordered: most -> least secure
+  IdentityFile		/root/.ssh/id_ed25519
+  IdentityFile		/root/.ssh/id_ecdsa
+  IdentityFile		/root/.ssh/id_rsa

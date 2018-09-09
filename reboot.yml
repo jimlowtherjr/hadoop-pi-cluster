@@ -1,0 +1,38 @@
+---
+- name:                Reboot host(s) and wait for it to return
+                       # Answer found at Red Hat
+                       #   https://access.redhat.com/solutions/3092881
+  hosts:               all
+  remote_user:         pi
+  become:              yes
+
+  vars:
+    
+    reboot_delay:           10  # Reboot delay, in seconds
+    return_port:            22  # SSH port to check for server availability
+    return_delay:           40  # Time, in seconds, when the first connection attempt will start
+    return_timeout:         300 # Time, in seconds, the connection probes will continue
+    return_connect_timeout: 20  # Time, in seconds, 
+
+
+  tasks:
+    - name:                 initialize a server reboot
+      shell:                "sleep {{ reboot_delay }} && shutdown -r now"
+      async:                300
+      poll:                 0
+      ignore_errors:        true
+
+    - name:                 Wait for server(s) to come back
+      wait_for:
+        host:               "{{ inventory_hostname }}"
+        state:              started
+        port:               "{{ return_port }}"
+        delay:              "{{ return_delay }}"
+        timeout:            "{{ return_timeout }}"
+        connect_timeout:    "{{ return_connect_timeout }}"
+      delegate_to:          127.0.0.1
+
+    - name:                 We are back
+      debug:
+        msg:                "We're back!!!"
+
