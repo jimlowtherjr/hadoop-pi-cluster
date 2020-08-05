@@ -46,3 +46,7 @@ Thumbs.db
 id_ecdsa
 id_ed25519
 id_rsa
+
+# ansible stuff #
+#################
+*.retry
